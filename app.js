@@ -18,6 +18,7 @@ nunjucks.configure('views', {
   express: app,
 });
 
+
 const MOST_LIKED_FOSSILS = {
   aust: {
     img: '/img/australopith.png',
@@ -64,38 +65,47 @@ const OTHER_FOSSILS = [
 
 app.get('/', (req, res) => {
   if (req.session.username) {
-    res.redirect('/top-fossils');
+    res.redirect('/top-fossils'); // Redirect to /top-fossils if the user's name is in the session.
   } else {
     res.render('homepage.html.njk');
   }
 });
 
+
+
 app.post('/get-name', (req, res) => {
-  const username  = req.body;
-  
-  if (username) {
-    req.session.username = username;}
-    res.render('top-fossils.html.njk');
+  const { name } = req.body;
+  req.session.username = name; // Store the user's name in the session
+  res.redirect('/top-fossils'); // Redirect to the top-fossils page
 });
 
-app.get('/top-fossils', (req, res) => {
-  const username = req.session.username;
 
-  if (username) {
-    res.render('top-fossils.html.njk', { username: username });
+app.get('/top-fossils', (req, res) => {
+  if (req.session.username) {
+    res.render('top-fossils.html.njk', { fossils: MOST_LIKED_FOSSILS, username: req.session.username });
   } else {
-    res.redirect('/');
+    res.redirect('/'); // Redirect to the homepage if the user's name is not in the session.
   }
 });
 
-app.post('/like-fossil', (req, res) => {
-  const { fossilId } = req.body;
 
+app.post('/like-fossil', (req, res) => {
+  
+  const fossilId = req.body.fossilId;
+  
   if (MOST_LIKED_FOSSILS[fossilId]) {
+    
     MOST_LIKED_FOSSILS[fossilId].num_likes++;
+    
     res.render('thank-you.html.njk', { username: req.session.username });
-  } 
+
+    
+  } else {
+    
+    res.status(400).send('Invalid fossil ID');
+  }
 });
+
 
 app.get('/random-fossil.json', (req, res) => {
   const randomFossil = lodash.sample(OTHER_FOSSILS);

@@ -9,11 +9,12 @@ getRandomFossilBtn.addEventListener('click', () => {
   axios.get('/random-fossil.json')
     .then((response) => {
       
-      const { name, image } = response.data;
+      const { name, img } = response.data;
 
-      randomFossilImage.innerHTML = `<img src="${image}" alt="${name}">`;
+      randomFossilImage.innerHTML = `<img src="${img}" alt="${name}">`;
       randomFossilName.innerText = name;
     });
     
 });
 
+  

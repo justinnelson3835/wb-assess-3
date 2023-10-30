@@ -7,7 +7,7 @@
 {% block content %}
   <h1> Welcome, {{ username }}!</h1>
 
-<form action="/like-fossil" method="POST">
+  <form action="/like-fossil" method="POST">
     <label for="fossilSelect">Select a fossil to like:</label>
     <select id="fossilSelect" name="fossilId">
       {% for key, fossil in fossils %}
@@ -17,11 +17,11 @@
     <button type="submit">Like</button>
   </form>
 
-    {% for fossil in fossils %}
+  {% for key, fossil in fossils %}
     <div class="fossil-div">
-      <h3>{{ username }}, this is a {{ fossil.name }}</h3>
-      <h2>Liked {{ fossil.likes }} times.</h2>
-      <img src="{{ fossils.img }}" />
+      <h3>This is a {{ fossil.name }}</h3>
+      <h2>Liked {{ fossil.num_likes }} times.</h2>
+      <img src="{{ fossil.img }}" />
     </div>
-    {% endfor %}
- {% endblock %}
+  {% endfor %}
+{% endblock %}
